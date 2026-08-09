@@ -8,60 +8,56 @@ The repository will be updated as new practicals are completed.
 
 ## 👨‍💻 Student Details
 
-| Detail | Information |
-|---|---|
-| **Name** | Yash Bhardwaj |
-| **Section** | A |
-| **Roll No.** | 09 |
-| **Batch** | A-A1 |
-| **Course** | Machine Learning |
+| Detail       | Information       |
+|--------------|--------------------|
+| **Name**     | Yash Bhardwaj      |
+| **Section**  | A                  |
+| **Roll No.** | 09                 |
+| **Batch**    | A-A1               |
+| **Course**   | Machine Learning   |
 
 ---
 
 # 📚 Practicals
 
-| Lab No. | Practical | Dataset / Topic | Status |
-|---|---|---|---|
-| **Lab 1** | Data Preprocessing | Titanic Dataset | ✅ Completed |
-| **Lab 2** | Regression Models | USA Housing Dataset | ✅ Completed |
-| **Lab 3** | — | — | ⏳ Pending |
-| **Lab 4** | — | — | ⏳ Pending |
-| **Lab 5** | — | — | ⏳ Pending |
+| Lab No.   | Practical                                   | Dataset / Topic      | Status       |
+|-----------|----------------------------------------------|-----------------------|--------------|
+| **Lab 1** | Data Preprocessing                           | Titanic Dataset       | ✅ Completed |
+| **Lab 2** | Regression Models (SLR, MLR, Ridge, Lasso)   | USA Housing Dataset   | ✅ Completed |
+| **Lab 3** | —                                             | —                      | ⏳ Pending   |
+| **Lab 4** | —                                             | —                      | ⏳ Pending   |
+| **Lab 5** | —                                             | —                      | ⏳ Pending   |
 
 ---
 
 # 🧪 Lab 1 — Data Preprocessing
 
+**Folder:** [`Lab-1_Data-Preprocessing`](./Lab-1_Data-Preprocessing) &nbsp;|&nbsp; **Notebook:** `YashBhardwaj_ML-1.ipynb` &nbsp;|&nbsp; **Data:** `titanic.csv`
+
 ## Aim
 
-To study and apply **Data Preprocessing techniques** on the given dataset and prepare the **Titanic dataset** for training with a machine learning algorithm.
+To study and apply **data preprocessing techniques** on the given dataset and prepare the **Titanic dataset** for training with a machine learning algorithm.
 
 ## Dataset
 
-**Titanic Dataset**
-
-The dataset contains passenger-related information including:
+**Titanic Dataset** — the dataset contains passenger-related information including:
 
 - Passenger ID
-- Survival Status
-- Passenger Class
+- Survival Status (`Survived`)
+- Passenger Class (`Pclass`)
 - Name
 - Sex
 - Age
-- Number of Siblings / Spouses
-- Number of Parents / Children
+- Number of Siblings / Spouses (`SibSp`)
+- Number of Parents / Children (`Parch`)
 - Ticket
 - Fare
 - Cabin
-- Port of Embarkation
+- Port of Embarkation (`Embarked`)
 
-The `Survived` column is used as the target variable.
-
-The original dataset contains **891 records and 12 attributes**.
+The `Survived` column is used as the **target variable**. The original dataset contains **891 records and 12 attributes**.
 
 ## Data Preprocessing Steps
-
-The following preprocessing steps are performed:
 
 1. Data Inspection
 2. Missing Value Handling
@@ -74,27 +70,179 @@ The following preprocessing steps are performed:
 9. Feature and Target Separation
 10. Train-Test Split
 
-## Missing Value Handling
+### 1. Missing Value Handling
 
-Missing values are identified using `isnull().sum()`.
+Missing values are identified using `isnull().sum()`. The dataset initially contains:
 
-The dataset initially contains:
+| Column       | Missing Values |
+|--------------|-----------------|
+| **Age**      | 177             |
+| **Cabin**    | 687             |
+| **Embarked** | 2               |
 
-- **Age:** 177 missing values
-- **Cabin:** 687 missing values
-- **Embarked:** 2 missing values
+- Missing `Age` values are filled using the **median**.
+- Missing `Embarked` values are filled using the **mode**.
+- The `Cabin` column is **dropped** entirely due to its large proportion of missing values.
 
-The missing `Age` values are handled using the median, while missing `Embarked` values are handled using the mode.
+### 2. Categorical Data Encoding
 
-The `Cabin` column is removed because of its large number of missing values.
+Categorical variables are converted into numerical form so they can be used by the model.
 
-## Categorical Data Encoding
-
-Categorical variables are converted into numerical form.
-
-The `Embarked` feature is mapped as:
+`Embarked` is manually mapped as:
 
 ```text
 S → 0
 C → 1
 Q → 2
+```
+
+`Sex` is encoded using scikit-learn's `LabelEncoder` (`male → 0`, `female → 1`).
+
+### 3. Duplicate Data Checking
+
+Duplicate rows are checked using `df.duplicated().sum()`. No duplicate records are found in the dataset.
+
+### 4. Outlier Detection and Removal
+
+- Boxplots are used to visualize outliers in the **Age** and **Fare** columns.
+- Outliers in **Fare** are removed using the **IQR (Interquartile Range) method**:
+  `lower = Q1 − 1.5×IQR`, `upper = Q3 + 1.5×IQR`.
+
+### 5. Exploratory Data Analysis and Visualization
+
+- Pie chart of the `Sex` distribution
+- Histogram (with KDE) of `Age`
+- Count plot of `Survived`
+- Count plot of `Sex` vs. `Survived`
+- Scatter plot of `Age` vs. `Fare`
+- Correlation heatmap of numeric features
+- Pairplot across all numeric features
+
+### 6. Feature Scaling
+
+`Age` and `Fare` are standardized using scikit-learn's `StandardScaler` so both features are on a comparable scale.
+
+### 7. Feature and Target Separation
+
+```python
+X = df.drop("Survived", axis=1)
+y = df["Survived"]
+```
+
+### 8. Train-Test Split
+
+The data is split **80% train / 20% test** using `train_test_split(..., test_size=0.20, random_state=42)`.
+
+---
+
+# 🧪 Lab 2 — Regression Models (Simple, Multiple, Ridge & Lasso)
+
+**Folder:** [`Lab-2_Linear-Regression-Models`](./Lab-2_Linear-Regression-Models) &nbsp;|&nbsp; **Notebook:** `YashBhardwaj_Practical_2_MLR.ipynb` &nbsp;|&nbsp; **Data:** `USA_Housing.csv`
+
+## Aim
+
+To study and implement **Simple Linear Regression**, **Multiple Linear Regression**, and **regularized regression (Ridge & Lasso)** with hyperparameter tuning, in order to predict house prices from the USA Housing dataset.
+
+## Dataset
+
+**USA Housing Dataset** — **5000 records and 7 attributes**:
+
+- Avg. Area Income
+- Avg. Area House Age
+- Avg. Area Number of Rooms
+- Avg. Area Number of Bedrooms
+- Area Population
+- Price *(target variable)*
+- Address *(dropped — non-numeric, not predictive)*
+
+## Workflow
+
+1. **Data Loading & Inspection** — `head()`, `tail()`, `shape`, `describe()`
+2. **Column Cleanup** — the `Address` column is dropped as it holds no predictive value
+3. **Missing Value & Duplicate Checks** — `isnull().sum()` and `duplicated().sum()`
+4. **Outlier Detection & Removal** — boxplots + IQR method applied to `Avg. Area Income` and `Price`
+5. **Exploratory Data Analysis** — boxplots, correlation heatmap, and distribution plots (histogram + KDE) for `Price` and `Avg. Area Income`
+6. **Simple Linear Regression (SLR)** — `Avg. Area Income` → `Price`
+7. **Multiple Linear Regression (MLR)** — all remaining numeric features → `Price`
+8. **Ridge Regression** — baseline model, then tuned via `GridSearchCV`
+9. **Lasso Regression** — tuned via `GridSearchCV`
+10. **Custom Prediction** — takes user input and predicts house price interactively
+
+## Results
+
+### Simple Linear Regression (Avg. Area Income → Price)
+
+| Metric | Value |
+|--------|-------|
+| MAE    | 216,087.71 |
+| MSE    | 70,880,962,067.45 |
+| RMSE   | 464.85 |
+| R² Score | 0.398 |
+
+### Multiple Linear Regression (all features → Price)
+
+| Metric | Value |
+|--------|-------|
+| MAE    | 78,456.94 |
+| MSE    | 9,643,840,322.41 |
+| RMSE   | 98,203.06 |
+| R² Score | 0.918 |
+
+### Ridge Regression (tuned via GridSearchCV, `cv=5`)
+
+- Parameter grid: `alpha = [0.001, 0.01, 1, 10, 100]`
+- **Best alpha:** `1` (best CV R² ≈ 0.910)
+
+| Metric | Value |
+|--------|-------|
+| MAE    | 78,456.01 |
+| MSE    | 9,643,550,061.42 |
+| RMSE   | 98,201.58 |
+| R² Score | 0.918 |
+
+### Lasso Regression (tuned via GridSearchCV, `cv=5`)
+
+- Parameter grid: `alpha = [0.001, 0.01, 0.1, 1, 10]`, `max_iter=5000`
+- **Best alpha:** `0.001`
+- **R² Score:** 0.918
+
+**Takeaway:** Multiple Linear Regression dramatically outperforms Simple Linear Regression (R² of **0.92** vs. **0.40**), since house price depends on several features beyond income alone. Ridge and Lasso regularization achieve virtually the same accuracy as plain MLR here, indicating minimal overfitting/multicollinearity in this dataset.
+
+---
+
+# 🛠️ Tech Stack
+
+- **Language:** Python 3
+- **Libraries:** `pandas`, `numpy`, `matplotlib`, `seaborn`, `scikit-learn`
+- **Environment:** Jupyter Notebook
+
+---
+
+# ▶️ How to Run
+
+```bash
+# Clone the repository
+git clone https://github.com/BhardwajYash18/ML-Practicals.git
+cd ML-Practicals
+
+# Install dependencies
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+
+# Launch Jupyter and open the desired lab notebook
+jupyter notebook
+```
+
+---
+
+# 📁 Repository Structure
+
+```text
+ML-Practicals/
+├── Lab-1_Data-Preprocessing/
+│   ├── YashBhardwaj_ML-1.ipynb
+│   └── titanic.csv
+├── Lab-2_Linear-Regression-Models/
+│   ├── YashBhardwaj_Practical_2_MLR.ipynb
+│   └── USA_Housing.csv
+└── README.md
+```
