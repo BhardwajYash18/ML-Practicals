@@ -24,7 +24,7 @@ The repository will be updated as new practicals are completed.
 |-----------|----------------------------------------------|-----------------------|--------------|
 | **Lab 1** | Data Preprocessing                           | Titanic Dataset       | ✅ Completed |
 | **Lab 2** | Regression Models (SLR, MLR, Ridge, Lasso)   | USA Housing Dataset   | ✅ Completed |
-| **Lab 3** | —                                             | —                      | ⏳ Pending   |
+| **Lab 3** | Find-S & Candidate Elimination Algorithm     | EnjoySport Dataset    | ✅ Completed |
 | **Lab 4** | —                                             | —                      | ⏳ Pending   |
 | **Lab 5** | —                                             | —                      | ⏳ Pending   |
 
@@ -210,6 +210,64 @@ To study and implement **Simple Linear Regression**, **Multiple Linear Regressio
 
 ---
 
+# 🧪 Lab 3 — Find-S & Candidate Elimination Algorithm
+
+**Folder:** [`Lab-3_Find-S_And_CandidateElimination_Algorithm`](./Lab-3_Find-S_And_CandidateElimination_Algorithm) &nbsp;|&nbsp; **Notebook:** `A-A1-09-YashBhardwaj_ML-3.ipynb` &nbsp;|&nbsp; **Data:** `enjoy.csv`
+
+## Aim
+
+To implement the **Find-S algorithm** and the **Candidate Elimination algorithm** for concept learning — deriving the most specific and the version-space (specific + general boundary) hypotheses consistent with a set of training examples.
+
+## Dataset
+
+**EnjoySport Dataset** (`enjoy.csv`) — the classic concept-learning dataset with **10 records and 7 attributes**:
+
+- Sky
+- AirTemp
+- Humidity
+- Wind
+- Water
+- Forecast
+- EnjoySport *(target variable — `Yes`/`No`)*
+
+The dataset has **no missing values and no duplicate rows** (verified with `isnull().sum()` and `duplicated().sum()`).
+
+## Workflow
+
+1. **Data Loading & Inspection** — `head()`, `tail()`, `info()`, `describe()`, `shape`
+2. **Missing Value & Duplicate Checks**
+3. **Feature/Target Split** — `X = df.iloc[:, :-1]`, `y = df.iloc[:, -1]`
+4. **Find-S Algorithm** — starts with the most specific hypothesis and generalizes it using only the **positive** (`Yes`) training examples
+5. **Candidate Elimination Algorithm** — maintains both a **specific boundary (S)** and a **general boundary (G)**, updating S on positive examples and G on negative examples to converge on the version space
+
+## Results
+
+### Find-S Algorithm
+
+Starting from `None`, the hypothesis is generalized step by step over each positive example. The **final maximally-specific hypothesis**:
+
+```text
+['Sunny', 'Warm', '?', '?', '?', '?']
+```
+
+This means: EnjoySport = Yes whenever `Sky = Sunny` and `AirTemp = Warm`, regardless of Humidity, Wind, Water, or Forecast.
+
+### Candidate Elimination Algorithm
+
+Run over all 10 examples, tracking S and G after each one.
+
+**Final Specific Boundary (S):**
+
+```text
+['Sunny', 'Warm', '?', '?', '?', '?']
+```
+
+**Final General Boundary (G):** contains `['Sunny', ?, ?, ?, ?, ?]` and `['?', 'Warm', ?, ?, ?, ?]` as the two maximally-general consistent hypotheses (matching S).
+
+> **Note:** the notebook's `general` list accumulates an entry for *every* attribute mismatched on a negative example without pruning hypotheses that are later made inconsistent or duplicated, so the raw printed `G` list contains repeated/inconsistent entries. The two boundaries above are the ones that survive as genuinely maximally-general and consistent with all examples; deduplicating and filtering `general` (standard Candidate Elimination removes any hypothesis in G more general than another, and any inconsistent with a later positive example) would be a good follow-up cleanup.
+
+---
+
 # 🛠️ Tech Stack
 
 - **Language:** Python 3
@@ -244,5 +302,8 @@ ML-Practicals/
 ├── Lab-2_Linear-Regression-Models/
 │   ├── YashBhardwaj_Practical_2_MLR.ipynb
 │   └── USA_Housing.csv
+├── Lab-3_Find-S_And_CandidateElimination_Algorithm/
+│   ├── A-A1-09-YashBhardwaj_ML-3.ipynb
+│   └── enjoy.csv
 └── README.md
 ```
