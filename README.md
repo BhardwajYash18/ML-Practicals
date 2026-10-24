@@ -1,309 +1,513 @@
 # Machine Learning Practicals
 
-This repository contains my **Machine Learning Laboratory practicals**, including Jupyter Notebooks, datasets, implementations, visualizations, and related practical work completed as part of the Machine Learning course.
+A collection of Machine Learning laboratory practicals implemented in Python using Jupyter Notebooks. This repository covers data preprocessing, regression, concept learning, decision trees, K-Nearest Neighbors, Artificial Neural Networks, and Naive Bayes classification.
 
-The repository will be updated as new practicals are completed.
+## Student Information
 
----
+| Field | Details |
+|---|---|
+| Name | Yash Bhardwaj |
+| Section | A |
+| Roll Number | 09 |
+| Batch | A-A1 |
+| Subject | Machine Learning |
 
-## 👨‍💻 Student Details
+## Table of Contents
 
-| Detail       | Information       |
-|--------------|--------------------|
-| **Name**     | Yash Bhardwaj      |
-| **Section**  | A                  |
-| **Roll No.** | 09                 |
-| **Batch**    | A-A1               |
-| **Course**   | Machine Learning   |
-
----
-
-# 📚 Practicals
-
-| Lab No.   | Practical                                   | Dataset / Topic      | Status       |
-|-----------|----------------------------------------------|-----------------------|--------------|
-| **Lab 1** | Data Preprocessing                           | Titanic Dataset       | ✅ Completed |
-| **Lab 2** | Regression Models (SLR, MLR, Ridge, Lasso)   | USA Housing Dataset   | ✅ Completed |
-| **Lab 3** | Find-S & Candidate Elimination Algorithm     | EnjoySport Dataset    | ✅ Completed |
-| **Lab 4** | —                                             | —                      | ⏳ Pending   |
-| **Lab 5** | —                                             | —                      | ⏳ Pending   |
-
----
-
-# 🧪 Lab 1 — Data Preprocessing
-
-**Folder:** [`Lab-1_Data-Preprocessing`](./Lab-1_Data-Preprocessing) &nbsp;|&nbsp; **Notebook:** `YashBhardwaj_ML-1.ipynb` &nbsp;|&nbsp; **Data:** `titanic.csv`
-
-## Aim
-
-To study and apply **data preprocessing techniques** on the given dataset and prepare the **Titanic dataset** for training with a machine learning algorithm.
-
-## Dataset
-
-**Titanic Dataset** — the dataset contains passenger-related information including:
-
-- Passenger ID
-- Survival Status (`Survived`)
-- Passenger Class (`Pclass`)
-- Name
-- Sex
-- Age
-- Number of Siblings / Spouses (`SibSp`)
-- Number of Parents / Children (`Parch`)
-- Ticket
-- Fare
-- Cabin
-- Port of Embarkation (`Embarked`)
-
-The `Survived` column is used as the **target variable**. The original dataset contains **891 records and 12 attributes**.
-
-## Data Preprocessing Steps
-
-1. Data Inspection
-2. Missing Value Handling
-3. Removing Unnecessary Columns
-4. Categorical Data Encoding
-5. Duplicate Data Checking
-6. Outlier Detection and Removal
-7. Exploratory Data Analysis and Visualization
-8. Feature Scaling
-9. Feature and Target Separation
-10. Train-Test Split
-
-### 1. Missing Value Handling
-
-Missing values are identified using `isnull().sum()`. The dataset initially contains:
-
-| Column       | Missing Values |
-|--------------|-----------------|
-| **Age**      | 177             |
-| **Cabin**    | 687             |
-| **Embarked** | 2               |
-
-- Missing `Age` values are filled using the **median**.
-- Missing `Embarked` values are filled using the **mode**.
-- The `Cabin` column is **dropped** entirely due to its large proportion of missing values.
-
-### 2. Categorical Data Encoding
-
-Categorical variables are converted into numerical form so they can be used by the model.
-
-`Embarked` is manually mapped as:
-
-```text
-S → 0
-C → 1
-Q → 2
-```
-
-`Sex` is encoded using scikit-learn's `LabelEncoder` (`male → 0`, `female → 1`).
-
-### 3. Duplicate Data Checking
-
-Duplicate rows are checked using `df.duplicated().sum()`. No duplicate records are found in the dataset.
-
-### 4. Outlier Detection and Removal
-
-- Boxplots are used to visualize outliers in the **Age** and **Fare** columns.
-- Outliers in **Fare** are removed using the **IQR (Interquartile Range) method**:
-  `lower = Q1 − 1.5×IQR`, `upper = Q3 + 1.5×IQR`.
-
-### 5. Exploratory Data Analysis and Visualization
-
-- Pie chart of the `Sex` distribution
-- Histogram (with KDE) of `Age`
-- Count plot of `Survived`
-- Count plot of `Sex` vs. `Survived`
-- Scatter plot of `Age` vs. `Fare`
-- Correlation heatmap of numeric features
-- Pairplot across all numeric features
-
-### 6. Feature Scaling
-
-`Age` and `Fare` are standardized using scikit-learn's `StandardScaler` so both features are on a comparable scale.
-
-### 7. Feature and Target Separation
-
-```python
-X = df.drop("Survived", axis=1)
-y = df["Survived"]
-```
-
-### 8. Train-Test Split
-
-The data is split **80% train / 20% test** using `train_test_split(..., test_size=0.20, random_state=42)`.
+1. [Overview](#overview)
+2. [Practical 1: Data Preprocessing](#practical-1-data-preprocessing)
+3. [Practical 2: Linear Regression Models](#practical-2-linear-regression-models)
+4. [Practical 3: Find-S and Candidate Elimination](#practical-3-find-s-and-candidate-elimination)
+5. [Practical 4: Decision Tree Classification](#practical-4-decision-tree-classification)
+6. [Practical 5: K-Nearest Neighbors](#practical-5-k-nearest-neighbors-knn)
+7. [Practical 6: Artificial Neural Network](#practical-6-artificial-neural-network-ann)
+8. [Practical 7: Naive Bayes Classification](#practical-7-naive-bayes-classification)
+9. [Technologies Used](#technologies-used)
+10. [Repository Structure](#repository-structure)
+11. [Installation and Setup](#installation-and-setup)
+12. [How to Run](#how-to-run)
+13. [Learning Outcomes](#learning-outcomes)
 
 ---
 
-# 🧪 Lab 2 — Regression Models (Simple, Multiple, Ridge & Lasso)
+## Overview
 
-**Folder:** [`Lab-2_Linear-Regression-Models`](./Lab-2_Linear-Regression-Models) &nbsp;|&nbsp; **Notebook:** `YashBhardwaj_Practical_2_MLR.ipynb` &nbsp;|&nbsp; **Data:** `USA_Housing.csv`
+This repository contains seven Machine Learning practicals covering fundamental algorithms, data analysis techniques, model training, and evaluation.
 
-## Aim
-
-To study and implement **Simple Linear Regression**, **Multiple Linear Regression**, and **regularized regression (Ridge & Lasso)** with hyperparameter tuning, in order to predict house prices from the USA Housing dataset.
-
-## Dataset
-
-**USA Housing Dataset** — **5000 records and 7 attributes**:
-
-- Avg. Area Income
-- Avg. Area House Age
-- Avg. Area Number of Rooms
-- Avg. Area Number of Bedrooms
-- Area Population
-- Price *(target variable)*
-- Address *(dropped — non-numeric, not predictive)*
-
-## Workflow
-
-1. **Data Loading & Inspection** — `head()`, `tail()`, `shape`, `describe()`
-2. **Column Cleanup** — the `Address` column is dropped as it holds no predictive value
-3. **Missing Value & Duplicate Checks** — `isnull().sum()` and `duplicated().sum()`
-4. **Outlier Detection & Removal** — boxplots + IQR method applied to `Avg. Area Income` and `Price`
-5. **Exploratory Data Analysis** — boxplots, correlation heatmap, and distribution plots (histogram + KDE) for `Price` and `Avg. Area Income`
-6. **Simple Linear Regression (SLR)** — `Avg. Area Income` → `Price`
-7. **Multiple Linear Regression (MLR)** — all remaining numeric features → `Price`
-8. **Ridge Regression** — baseline model, then tuned via `GridSearchCV`
-9. **Lasso Regression** — tuned via `GridSearchCV`
-10. **Custom Prediction** — takes user input and predicts house price interactively
-
-## Results
-
-### Simple Linear Regression (Avg. Area Income → Price)
-
-| Metric | Value |
-|--------|-------|
-| MAE    | 216,087.71 |
-| MSE    | 70,880,962,067.45 |
-| RMSE   | 464.85 |
-| R² Score | 0.398 |
-
-### Multiple Linear Regression (all features → Price)
-
-| Metric | Value |
-|--------|-------|
-| MAE    | 78,456.94 |
-| MSE    | 9,643,840,322.41 |
-| RMSE   | 98,203.06 |
-| R² Score | 0.918 |
-
-### Ridge Regression (tuned via GridSearchCV, `cv=5`)
-
-- Parameter grid: `alpha = [0.001, 0.01, 1, 10, 100]`
-- **Best alpha:** `1` (best CV R² ≈ 0.910)
-
-| Metric | Value |
-|--------|-------|
-| MAE    | 78,456.01 |
-| MSE    | 9,643,550,061.42 |
-| RMSE   | 98,201.58 |
-| R² Score | 0.918 |
-
-### Lasso Regression (tuned via GridSearchCV, `cv=5`)
-
-- Parameter grid: `alpha = [0.001, 0.01, 0.1, 1, 10]`, `max_iter=5000`
-- **Best alpha:** `0.001`
-- **R² Score:** 0.918
-
-**Takeaway:** Multiple Linear Regression dramatically outperforms Simple Linear Regression (R² of **0.92** vs. **0.40**), since house price depends on several features beyond income alone. Ridge and Lasso regularization achieve virtually the same accuracy as plain MLR here, indicating minimal overfitting/multicollinearity in this dataset.
+| Practical | Topic | Dataset / Resource | Algorithm or Technique |
+|---|---|---|---|
+| 1 | Data Preprocessing | Titanic dataset | Data cleaning and transformation |
+| 2 | Linear Regression Models | USA Housing dataset | Simple, Multiple, Ridge and Lasso Regression |
+| 3 | Find-S and Candidate Elimination | EnjoySport dataset | Concept learning |
+| 4 | Decision Tree Classification | Wine Quality Red dataset | Decision Tree Classifier |
+| 5 | K-Nearest Neighbors | Diabetes dataset | KNN Classification and Regression |
+| 6 | Artificial Neural Network | Seeds dataset | Multilayer Perceptron (MLP) |
+| 7 | Naive Bayes Classification | Raisin Dataset | Gaussian Naive Bayes |
 
 ---
 
-# 🧪 Lab 3 — Find-S & Candidate Elimination Algorithm
+## Practical 1: Data Preprocessing
 
-**Folder:** [`Lab-3_Find-S_And_CandidateElimination_Algorithm`](./Lab-3_Find-S_And_CandidateElimination_Algorithm) &nbsp;|&nbsp; **Notebook:** `A-A1-09-YashBhardwaj_ML-3.ipynb` &nbsp;|&nbsp; **Data:** `enjoy.csv`
+**Objective:** To understand and perform data preprocessing operations required to prepare raw data for Machine Learning.
 
-## Aim
+**Dataset:** Titanic dataset (`titanic.csv`)
 
-To implement the **Find-S algorithm** and the **Candidate Elimination algorithm** for concept learning — deriving the most specific and the version-space (specific + general boundary) hypotheses consistent with a set of training examples.
+### Topics Covered
 
-## Dataset
+- Loading datasets using Pandas.
+- Inspecting dataset structure and dimensions.
+- Identifying missing values.
+- Handling missing data.
+- Data cleaning and transformation.
+- Preparing data for further analysis and Machine Learning.
 
-**EnjoySport Dataset** (`enjoy.csv`) — the classic concept-learning dataset with **10 records and 7 attributes**:
+### Tools and Libraries
 
-- Sky
-- AirTemp
-- Humidity
-- Wind
-- Water
-- Forecast
-- EnjoySport *(target variable — `Yes`/`No`)*
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
 
-The dataset has **no missing values and no duplicate rows** (verified with `isnull().sum()` and `duplicated().sum()`).
+**Notebook:** `YashBhardwaj_ML-1.ipynb`
 
-## Workflow
-
-1. **Data Loading & Inspection** — `head()`, `tail()`, `info()`, `describe()`, `shape`
-2. **Missing Value & Duplicate Checks**
-3. **Feature/Target Split** — `X = df.iloc[:, :-1]`, `y = df.iloc[:, -1]`
-4. **Find-S Algorithm** — starts with the most specific hypothesis and generalizes it using only the **positive** (`Yes`) training examples
-5. **Candidate Elimination Algorithm** — maintains both a **specific boundary (S)** and a **general boundary (G)**, updating S on positive examples and G on negative examples to converge on the version space
-
-## Results
-
-### Find-S Algorithm
-
-Starting from `None`, the hypothesis is generalized step by step over each positive example. The **final maximally-specific hypothesis**:
-
-```text
-['Sunny', 'Warm', '?', '?', '?', '?']
-```
-
-This means: EnjoySport = Yes whenever `Sky = Sunny` and `AirTemp = Warm`, regardless of Humidity, Wind, Water, or Forecast.
-
-### Candidate Elimination Algorithm
-
-Run over all 10 examples, tracking S and G after each one.
-
-**Final Specific Boundary (S):**
-
-```text
-['Sunny', 'Warm', '?', '?', '?', '?']
-```
-
-**Final General Boundary (G):** contains `['Sunny', ?, ?, ?, ?, ?]` and `['?', 'Warm', ?, ?, ?, ?]` as the two maximally-general consistent hypotheses (matching S).
-
-> **Note:** the notebook's `general` list accumulates an entry for *every* attribute mismatched on a negative example without pruning hypotheses that are later made inconsistent or duplicated, so the raw printed `G` list contains repeated/inconsistent entries. The two boundaries above are the ones that survive as genuinely maximally-general and consistent with all examples; deduplicating and filtering `general` (standard Candidate Elimination removes any hypothesis in G more general than another, and any inconsistent with a later positive example) would be a good follow-up cleanup.
+**Folder:** [`Lab-1_Data-Preprocessing`](./Lab-1_Data-Preprocessing/)
 
 ---
 
-# 🛠️ Tech Stack
+## Practical 2: Linear Regression Models
 
-- **Language:** Python 3
-- **Libraries:** `pandas`, `numpy`, `matplotlib`, `seaborn`, `scikit-learn`
-- **Environment:** Jupyter Notebook
+**Objective:** To implement and compare different regression techniques for predicting continuous numerical values.
+
+**Dataset:** USA Housing dataset (`USA_Housing.csv`)
+
+### Models Implemented
+
+1. Simple Linear Regression
+2. Multiple Linear Regression
+3. Ridge Regression
+4. Lasso Regression
+
+### Topics Covered
+
+- Loading and exploring the dataset.
+- Selecting input features and the target variable.
+- Splitting data into training and testing sets.
+- Training regression models.
+- Generating predictions.
+- Comparing regression models using evaluation metrics.
+
+### Tools and Libraries
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Scikit-learn
+
+**Notebook:** `YashBhardwaj_Practical_2_MLR.ipynb`
+
+**Folder:** [`Lab-2_Linear-Regression-Models`](./Lab-2_Linear-Regression-Models/)
 
 ---
 
-# ▶️ How to Run
+## Practical 3: Find-S and Candidate Elimination
 
-```bash
-# Clone the repository
-git clone https://github.com/BhardwajYash18/ML-Practicals.git
-cd ML-Practicals
+**Objective:** To implement concept learning algorithms and understand how hypotheses are generalized or specialized based on training examples.
 
-# Install dependencies
-pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+**Dataset:** EnjoySport dataset (`enjoy.csv`)
 
-# Launch Jupyter and open the desired lab notebook
-jupyter notebook
-```
+### Algorithms Implemented
+
+- Find-S Algorithm
+- Candidate Elimination Algorithm
+
+### Topics Covered
+
+- Concept learning.
+- Hypothesis representation.
+- Positive and negative training examples.
+- General and specific hypotheses.
+- Finding the most specific consistent hypothesis.
+- Maintaining the version space.
+- Updating hypothesis boundaries using training data.
+
+### Tools and Libraries
+
+- Python
+- Pandas
+
+**Notebook:** `A-A1-09-YashBhardwaj_ML-3.ipynb`
+
+**Folder:** [`Lab-3_Find-S_And_CandidateElimination_Algorithm`](./Lab-3_Find-S_And_CandidateElimination_Algorithm/)
 
 ---
 
-# 📁 Repository Structure
+## Practical 4: Decision Tree Classification
+
+**Objective:** To implement a Decision Tree Classifier on the Wine Quality Red dataset and analyze its classification performance.
+
+**Dataset:** Wine Quality Red dataset (`winequality-red.csv`)
+
+The dataset contains physicochemical measurements of red wine. The `quality` column is used as the target variable.
+
+### Topics Covered
+
+- Dataset loading and inspection.
+- Statistical summaries and data validation.
+- Missing-value and duplicate checks.
+- Exploratory Data Analysis (EDA).
+- Histograms and box plots.
+- Outlier analysis using the Interquartile Range (IQR).
+- Univariate, bivariate and multivariate analysis.
+- Feature and target separation.
+- Training and testing data splitting.
+- Decision Tree Classification using the entropy criterion.
+- Model training and prediction.
+- Classification evaluation metrics.
+- Confusion matrix visualization.
+- Decision tree depth and leaf analysis.
+- Decision tree visualization.
+
+### Evaluation Metrics
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Confusion matrix
+
+### Tools and Libraries
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+
+**Folder:** [`Lab-4_Decision_Tree_Classification`](./Lab-4_Decision_Tree_Classification/)
+
+---
+
+## Practical 5: K-Nearest Neighbors (KNN)
+
+**Objective:** To implement K-Nearest Neighbors for both classification and regression using the Diabetes dataset.
+
+**Dataset:** `diabetes (6).csv`
+
+### Part A: KNN Classification
+
+The classification model predicts the `Outcome` variable, representing the diabetes classification.
+
+### Part B: KNN Regression
+
+The regression model predicts the `BMI` variable using the remaining eligible features.
+
+### Topics Covered
+
+- Dataset loading and inspection.
+- Data cleaning and preprocessing.
+- Handling invalid zero values where appropriate.
+- Missing-value imputation.
+- Feature and target selection.
+- Feature scaling using `StandardScaler`.
+- Training and testing data splitting.
+- Implementing KNN classification.
+- Implementing KNN regression.
+- Comparing different values of K.
+- Cross-validation and hyperparameter selection.
+- Evaluating classification and regression models.
+
+### Classification Evaluation Metrics
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Confusion matrix
+
+### Regression Evaluation Metrics
+
+- Mean Squared Error (MSE)
+- Root Mean Squared Error (RMSE)
+- R-squared (R²)
+
+### Tools and Libraries
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+
+**Folder:** [`Lab-5_KNN_Algorithm.`](./Lab-5_KNN_Algorithm./)
+
+---
+
+## Practical 6: Artificial Neural Network (ANN)
+
+**Objective:** To implement a Multilayer Perceptron (MLP) classifier using TensorFlow and Keras for multiclass classification.
+
+**Dataset:** Seeds dataset (`seeds_new.csv`)
+
+The model classifies samples into three seed varieties using their numerical features.
+
+### Model Architecture
+
+The neural network consists of:
+
+- Input layer corresponding to the dataset features.
+- First hidden Dense layer with 16 neurons and ReLU activation.
+- Second hidden Dense layer with 8 neurons and ReLU activation.
+- Output Dense layer with 3 neurons and Softmax activation.
+
+### Topics Covered
+
+- Dataset loading and inspection.
+- Feature and target separation.
+- Encoding target classes.
+- Feature standardization using `StandardScaler`.
+- Training and testing data splitting.
+- Building a neural network using TensorFlow and Keras.
+- Compiling the model with the Adam optimizer.
+- Using sparse categorical cross-entropy as the loss function.
+- Training the network.
+- Early stopping to help prevent overfitting.
+- Predicting multiclass outputs.
+- Evaluating classification performance.
+
+### Tools and Libraries
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Scikit-learn
+- TensorFlow
+- Keras
+
+**Folder:** [`Lab-6_ANN_Classifier`](./Lab-6_ANN_Classifier/)
+
+---
+
+## Practical 7: Naive Bayes Classification
+
+**Objective:** To implement Gaussian Naive Bayes for classifying raisin varieties based on their numerical measurements.
+
+**Dataset:** Raisin Dataset (`Raisin_Dataset.xlsx`)
+
+The dataset contains 900 samples and eight columns, including seven numerical features and the categorical target variable `Class`.
+
+The two target classes are:
+
+- `Kecimen`
+- `Besni`
+
+### Algorithm Used
+
+**Gaussian Naive Bayes (`GaussianNB`)**
+
+Gaussian Naive Bayes is a probabilistic classification algorithm based on Bayes' theorem. It models numerical features using Gaussian distributions within each class and assumes conditional independence between features given the class.
+
+### Topics Covered
+
+- Loading an Excel dataset using Pandas.
+- Dataset inspection and statistical summaries.
+- Checking missing values and duplicate records.
+- Exploratory Data Analysis (EDA).
+- Class distribution visualization.
+- Histograms and box plots.
+- Kernel Density Estimation (KDE) plots.
+- Correlation heatmap.
+- Scatter plots for feature relationships.
+- Encoding target labels using `LabelEncoder`.
+- Separating features and target variables.
+- Splitting data into training and testing sets.
+- Training a Gaussian Naive Bayes classifier.
+- Generating predictions.
+- Evaluating classification performance.
+- Comparing training and testing accuracy.
+- Experimenting with different `var_smoothing` values.
+- Predicting the class of new raisin samples.
+
+### Evaluation Metrics
+
+- Accuracy
+- Weighted precision
+- Weighted recall
+- F1-score
+- Classification report
+- Confusion matrix
+
+### Tools and Libraries
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+- `openpyxl` for reading Excel files
+
+**Notebook:** `A-A1-09_YashBhardwaj_ML_Practical-7.ipynb`
+
+**Dataset:** `Raisin_Dataset.xlsx`
+
+**Folder:** [`Lab-7_Naive_Bayes_Classification`](./Lab-7_Naive_Bayes_Classification/)
+
+---
+
+## Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| Python | Programming language |
+| Jupyter Notebook | Interactive development and experimentation |
+| Pandas | Data manipulation and analysis |
+| NumPy | Numerical computing |
+| Matplotlib | Data visualization |
+| Seaborn | Statistical data visualization |
+| Scikit-learn | Machine Learning algorithms, preprocessing and evaluation |
+| TensorFlow | Neural network implementation |
+| Keras | Building and training neural networks |
+| openpyxl | Reading Excel datasets |
+
+---
+
+## Repository Structure
 
 ```text
 ML-Practicals/
+│
 ├── Lab-1_Data-Preprocessing/
-│   ├── YashBhardwaj_ML-1.ipynb
-│   └── titanic.csv
+│   └── Titanic dataset and notebook
+│
 ├── Lab-2_Linear-Regression-Models/
-│   ├── YashBhardwaj_Practical_2_MLR.ipynb
-│   └── USA_Housing.csv
+│   └── USA Housing dataset and notebook
+│
 ├── Lab-3_Find-S_And_CandidateElimination_Algorithm/
-│   ├── A-A1-09-YashBhardwaj_ML-3.ipynb
-│   └── enjoy.csv
+│   └── EnjoySport dataset and notebook
+│
+├── Lab-4_Decision_Tree_Classification/
+│   └── Wine Quality dataset and notebook
+│
+├── Lab-5_KNN_Algorithm./
+│   └── Diabetes dataset and notebook
+│
+├── Lab-6_ANN_Classifier/
+│   └── Seeds dataset and notebook
+│
+├── Lab-7_Naive_Bayes_Classification/
+│   ├── A-A1-09_YashBhardwaj_ML_Practical-7.ipynb
+│   └── Raisin_Dataset.xlsx
+│
 └── README.md
 ```
+
+*Note: The notebook and dataset descriptions above identify the resources used in each practical. Actual filenames may differ in some folders; check each folder for its exact contents.*
+
+---
+
+## Installation and Setup
+
+### 1. Install Python
+
+Install Python 3 from the official website:
+
+https://www.python.org/downloads/
+
+### 2. Clone the Repository
+
+```bash
+git clone https://github.com/BhardwajYash18/ML-Practicals.git
+```
+
+### 3. Navigate to the Project Directory
+
+```bash
+cd ML-Practicals
+```
+
+### 4. Create a Virtual Environment (Recommended)
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+Activate it on Linux or macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+### 5. Install the Required Libraries
+
+Install the common dependencies:
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter openpyxl
+```
+
+For Practical 6, install TensorFlow:
+
+```bash
+pip install tensorflow
+```
+
+---
+
+## How to Run
+
+1. Clone the repository.
+2. Install the required dependencies.
+3. Navigate to the folder of the practical you want to execute.
+4. Ensure the corresponding dataset is available at the file path specified in the notebook.
+5. Launch Jupyter Notebook:
+
+   ```bash
+   jupyter notebook
+   ```
+
+6. Open the relevant `.ipynb` file.
+7. Run the cells sequentially, from top to bottom.
+
+**Important:** Some notebooks use relative dataset paths. Keep each dataset in the expected location or update the file path in the notebook before running it.
+
+---
+
+## Learning Outcomes
+
+By completing these practicals, students gain experience with:
+
+- Data inspection, cleaning and preprocessing.
+- Exploratory Data Analysis and visualization.
+- Simple and multiple linear regression.
+- Regularization using Ridge and Lasso.
+- Concept learning using Find-S and Candidate Elimination.
+- Decision Tree classification and entropy.
+- KNN classification and regression.
+- Feature scaling and hyperparameter selection.
+- Artificial Neural Networks and multilayer perceptrons.
+- Gaussian Naive Bayes classification.
+- Model training, testing and prediction.
+- Evaluating Machine Learning models using suitable metrics.
+- Implementing Machine Learning algorithms with Python and Scikit-learn.
+
+---
+
+## Author
+
+**Yash Bhardwaj**
+
+- GitHub: [BhardwajYash18](https://github.com/BhardwajYash18)
+
+---
+
+*This repository is maintained for academic learning and Machine Learning laboratory practice.*
